@@ -1,0 +1,24 @@
+# Render Deployment Configuration
+# https://render.com
+
+services:
+  # CASA Spring Boot Application
+  - type: web
+    name: casa-security-analyzer
+    env: docker
+    dockerfilePath: ./Dockerfile
+    region: oregon
+    plan: free
+    branch: main
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: production
+      - key: SERVER_PORT
+        value: 8080
+      - key: MINIO_AUTO_CREATE_BUCKET
+        value: false
+      - key: POLICY_REQUIRE_AUTHENTICATION
+        value: false
+      - key: JAVA_OPTS
+        value: -Xmx512m -Xms256m
