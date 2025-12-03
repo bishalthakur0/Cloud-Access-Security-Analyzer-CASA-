@@ -1,0 +1,8 @@
+fileName,expectedStatus,sensitiveTypes,riskScore
+clean-document.txt,ALLOWED,[],0
+with-email.txt,BLOCKED,EMAIL,45
+with-credit-card.txt,BLOCKED,CREDIT_CARD,90
+with-aadhaar.txt,BLOCKED,AADHAAR,85
+with-aws-key.txt,BLOCKED,AWS_ACCESS_KEY,95
+with-password.txt,BLOCKED,PASSWORD,70
+mixed-sensitive.txt,BLOCKED,"EMAIL,CREDIT_CARD",95

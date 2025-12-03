@@ -1,0 +1,3 @@
+This document contains an email address.
+Please contact us at john.doe@example.com for more information.
+You can also reach support at support@company.org

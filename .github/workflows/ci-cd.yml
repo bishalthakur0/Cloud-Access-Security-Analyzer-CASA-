@@ -1,0 +1,59 @@
+name: CASA CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+
+    - name: Build with Maven
+      run: mvn clean install -DskipTests
+
+    - name: Run Unit Tests
+      run: mvn test
+
+    - name: Generate JaCoCo Coverage Report
+      run: mvn jacoco:report
+
+    - name: Upload Coverage Report
+      uses: actions/upload-artifact@v3
+      with:
+        name: jacoco-report
+        path: target/site/jacoco/
+
+    - name: Start Docker Compose
+      run: docker-compose up -d
+
+    - name: Wait for services
+      run: sleep 30
+
+    - name: Run Integration Tests
+      run: mvn verify -Dtest=*ApiTest
+
+    - name: Stop Docker Compose
+      run: docker-compose down
+
+    - name: Build Docker Image
+      run: docker build -t casa:latest .
+
+    - name: Archive Test Results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: test-results
+        path: target/surefire-reports/
